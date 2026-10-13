@@ -5,21 +5,41 @@
 // ==============================
 // LIGHT MODE AND DARK MODE
 // ==============================
+
 const themeToggle = document.getElementById("themeToggle");
 const themeIcon = document.getElementById("themeIcon");
 const themeLabel = document.getElementById("themeLabel");
-const savedTheme = localStorage.getItem("portfolio-theme");
 
-// Use the saved theme if available. Otherwise, start in light mode.
 function applyTheme(theme) {
     const isDark = theme === "dark";
+    const selectedTheme = isDark ? "dark" : "light";
 
-    document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+    // Apply the theme to the entire HTML document.
+    document.documentElement.setAttribute(
+        "data-theme",
+        selectedTheme
+    );
 
+    // Save the selected theme on this device.
+    try {
+        localStorage.setItem("portfolio-theme", selectedTheme);
+    } catch (error) {
+        console.warn("Unable to save the selected theme.");
+    }
+
+    // Update the toggle button.
     if (themeToggle && themeIcon && themeLabel) {
         themeIcon.textContent = isDark ? "☀️" : "🌙";
-        themeLabel.textContent = isDark ? "Light mode" : "Dark mode";
-        themeToggle.setAttribute("aria-pressed", String(isDark));
+
+        themeLabel.textContent = isDark
+            ? "Light mode"
+            : "Dark mode";
+
+        themeToggle.setAttribute(
+            "aria-pressed",
+            String(isDark)
+        );
+
         themeToggle.setAttribute(
             "aria-label",
             isDark ? "Switch to light mode" : "Switch to dark mode"
@@ -27,17 +47,30 @@ function applyTheme(theme) {
     }
 }
 
-applyTheme(savedTheme === "dark" ? "dark" : "light");
+// Load the saved theme, or use light mode by default.
+let savedTheme = "light";
 
+try {
+    savedTheme = localStorage.getItem("portfolio-theme") || "light";
+} catch (error) {
+    console.warn("Unable to read the saved theme.");
+}
+
+applyTheme(savedTheme);
+
+// Switch themes when the button is clicked.
 if (themeToggle) {
     themeToggle.addEventListener("click", () => {
-        const isCurrentlyDark = document.documentElement.getAttribute("data-theme") === "dark";
-        const nextTheme = isCurrentlyDark ? "light" : "dark";
+        const currentTheme =
+            document.documentElement.getAttribute("data-theme");
+
+        const nextTheme =
+            currentTheme === "dark" ? "light" : "dark";
 
         applyTheme(nextTheme);
-        localStorage.setItem("portfolio-theme", nextTheme);
     });
 }
+
 
 // Update the footer year automatically.
 const yearElement = document.getElementById("currentYear");
