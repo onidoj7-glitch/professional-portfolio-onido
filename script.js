@@ -19,6 +19,15 @@ function applyTheme(theme) {
         "data-theme",
         selectedTheme
     );
+    
+    console.log(
+    "Current theme:",
+    document.documentElement.getAttribute("data-theme")
+);
+console.log(
+    "Page background:",
+    getComputedStyle(document.body).backgroundColor
+);
 
     // Save the selected theme on this device.
     try {
