@@ -65,7 +65,7 @@ try {
     console.warn("Unable to read the saved theme.");
 }
 
-applyTheme(savedTheme);
+applyTheme("light");
 
 // Switch themes when the button is clicked.
 if (themeToggle) {
